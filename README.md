@@ -216,9 +216,9 @@ Addressing these three issues can reduce overall churn by 5-10% and significantl
 
 ## Project Files
 
-- **churn_analysis.ipynb** - Exploratory data analysis with statistical relationships
-- **churn_analysis_model.ipynb** - Model development and performance evaluation
-- **Data/churn.csv** - Customer dataset (7,043 records)
+- **notebooks/churn_analysis.ipynb** - Exploratory data analysis with statistical relationships
+- **notebooks/churn_analysis_model.ipynb** - Model development and performance evaluation
+- **data/Telco-Customer-Churn.csv** - Customer dataset (7,043 records)
 - **README.md** - Project documentation
 
 ---
