@@ -1,234 +1,247 @@
-# Customer Churn Analysis & Prediction Model
+# Customer Churn Analysis & Prediction
 
-## 1. Background and Overview
+![Python](https://img.shields.io/badge/Python-3.9+-blue)
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white)
+![Seaborn](https://img.shields.io/badge/Seaborn-3776AB?logo=python&logoColor=white)
 
-This project analyzes customer churn patterns in a telecom company through exploratory data analysis and predictive modeling. The analysis identifies key factors driving customer cancellations and develops a model to predict at-risk customers.
-
-**Why This Matters:**
-Understanding churn drivers enables data-driven retention strategies. Predictive models allow proactive intervention before customers leave, directly impacting revenue retention.
-
-**Project Scope:**
-- Analysis of 7,043 customer records
-- Exploratory analysis to identify statistical relationships with churn
-- Logistic regression model for churn prediction
-- Quantified recommendations based on feature importance and segment analysis
-
-**Analysis Methodology:**
-Data exploration revealed patterns in customer behavior. Univariate and bivariate analyses identified features most strongly correlated with churn. A classification model was built to predict future churn with 79% recall, suitable for targeting high-risk customers. Feature coefficients provide interpretable insights into which factors most significantly influence churn probability.
+![Banner](images/banner.png)
 
 ---
 
-## 2. Data Structure Overview
+## Overview
 
-**Dataset Overview:**
-- **Total Records:** 7,043 customers
-- **Data Quality:** No missing values (11 incomplete records removed during cleaning)
-- **Target Variable:** Churn (Yes/No) - 26.6% churned, 73.4% retained
+This project performs comprehensive customer churn analysis for a telecommunications company using both exploratory data analysis (EDA) and predictive modeling. By analyzing customer demographics, service usage patterns, and contract details, the project identifies key churn drivers and builds a machine learning model to predict which customers are at risk of leaving, enabling proactive retention strategies.
 
-**Features Analyzed:**
-- **Tenure:** How long customer has been with company (months)
-- **Contract Type:** Month-to-month, One-year, Two-year
-- **Internet Service:** DSL, Fiber optic, No internet service
-- **Tech Support:** Yes, No, No internet service
-- **Online Security:** Yes, No, No internet service
-- **Monthly Charges:** Monthly billing amount
-- **Total Charges:** Lifetime charges paid
-
-**Feature Categories:**
-- Numeric features: 3 (tenure, monthly charges, total charges)
-- Categorical features: 4 (contract, internet service, tech support, online security)
+**Business Problem:** Telecommunications companies face 15-25% annual churn rates, costing billions in lost revenue and requiring 5-10x more resources to acquire new customers than retain existing ones. Without data-driven insights, retention efforts are reactive rather than preventive.
 
 ---
 
-## 3. Executive Summary
+## Key Features
 
-**The Problem:**
-26.6% of customers are leaving the company - that's approximately 1 in 4 customers canceling their service.
-
-**The Solution:**
-A predictive model was built that can identify 79% of customers who will actually churn, enabling the company to intervene before they leave.
-
-**Three Biggest Reasons Customers Leave:**
-
-1. **Poor New Customer Experience:** 60% of brand new customers (0 months tenure) churn within the first month
-   - New customers are evaluating the service and switching if they experience problems
-   
-2. **Easy Exit Options:** Customers on month-to-month contracts churn at 43%, compared to only 3% for two-year contracts
-   - Flexible contracts reduce commitment and increase switching
-   
-3. **Service Quality Issues:** Fiber optic customers pay the most ($91/month) but have the highest churn rate (42%)
-   - Customers expect premium service for premium pricing; unmet expectations drive them away
-
-**Model Performance:**
-- Catches 79% of actual churners (high sensitivity for targeting interventions)
-- ROC-AUC Score: 0.825 (excellent discrimination ability)
-
-**Business Impact:**
-Addressing these three issues can reduce overall churn by 5-10% and significantly improve customer lifetime value.
+- **Comprehensive EDA** analyzing 7,043 customer records across demographics, service usage, and contract patterns
+- **79.4% churn recall** — predictive model identifies 297 of 374 actual churners, enabling targeted retention campaigns
+- **ROC-AUC score of 0.825** — excellent discrimination ability between churners and non-churners
+- Feature importance analysis revealing contract type, tech support, and internet service as primary churn drivers
+- Interactive visualizations including distribution plots, correlation heatmaps, and ROC curves
+- Actionable business recommendations for retention strategy optimization
 
 ---
 
-## 4. Insights Deep Dive
+## Dataset
 
-### Finding 1: Tenure is Critical for Retention
+| Property | Detail |
+|----------|--------|
+| Source | [Kaggle - Telco Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn) |
+| Size | 7,043 customers |
+| Time Period | Historical snapshot |
+| Churn Rate | 26.6% (1,869 churned, 5,174 retained) |
+| Features | 20+ variables including demographics, services, contracts, charges |
 
-| Tenure (Months) | Churn Rate | Customers |
-|-----------------|-----------|-----------|
-| 0 | 60% | 613 |
-| 1-3 | 55% | 800 |
-| 4-12 | 35% | 1,200 |
-| 13-24 | 15% | 1,500 |
-| 25+ | 5% | 2,919 |
+### Feature Categories
 
-**Insight:** New customers (0 months) have 12x higher churn rate than long-term customers (25+ months). The first 90 days are critical - churn drops significantly after 1 year.
+**Demographics:**
+- Gender, SeniorCitizen, Partner, Dependents
 
-**With Tech Support Impact:**
+**Services:**
+- PhoneService, MultipleLines, InternetService (DSL/Fiber optic/None)
+- OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport
+- StreamingTV, StreamingMovies
 
-| Tenure | No Support | With Support | Difference |
-|--------|-----------|--------------|-----------|
-| 0-3 months | 68% | 43% | -25 pts |
-| 24+ months | 25% | 10% | -15 pts |
+**Account Information:**
+- Tenure (months), Contract (Month-to-month/One year/Two year)
+- PaperlessBilling, PaymentMethod
+- MonthlyCharges, TotalCharges
 
-**Insight:** Tech support has strongest impact on new customers, reducing churn by 25 points. Even long-term customers benefit from support access.
-
----
-
-### Finding 2: Contract Type Strongly Predicts Retention
-
-| Contract Type | Churn Rate | Customers | Monthly Charges |
-|---------------|-----------|-----------|-----------------|
-| Month-to-month | 43% | 3,875 | $65.12 |
-| One year | 11% | 1,473 | $59.54 |
-| Two year | 3% | 1,684 | $61.22 |
-
-**Insight:** Contract length is the strongest predictor. Two-year contracts have 14x lower churn than month-to-month. Commitment dramatically improves retention.
+**Target Variable:**
+- Churn (Yes/No)
 
 ---
 
-### Finding 3: Fiber Optic Service Quality Issues
+## Tech Stack
 
-| Internet Service | Churn Rate | Customers | Avg Monthly Cost |
-|-----------------|-----------|-----------|-----------------|
-| Fiber optic | 42% | 3,096 | $91.50 |
-| DSL | 23% | 2,421 | $58.10 |
-| No internet | 7% | 1,526 | $21.08 |
-
-**Insight:** Fiber optic customers pay 58% more ($91.50 vs $58) but churn at 1.8x the rate. Premium pricing creates higher expectations that aren't being met.
-
----
-
-### Finding 4: Technical Support Reduces Churn
-
-| Tech Support Status | Churn Rate | Churn Reduction |
-|--------------------|-----------|-----------------|
-| No Support | 42% | - |
-| With Support | 15% | -27 pts |
-
-**Insight:** Tech support reduces churn by 27 points - one of the strongest retention factors.
-
-**New Customers (0-3 months):**
-
-| Status | Churn Rate |
-|--------|-----------|
-| No Support | 68% |
-| With Support | 43% |
-
-**Insight:** For new customers evaluating the service, tech support access reduces churn by 25 points.
+- **Python 3.9+**
+- **Scikit-learn** — Logistic Regression with class balancing
+- **Pandas** — data manipulation and feature engineering
+- **NumPy** — numerical computations
+- **Matplotlib / Seaborn** — visualizations and EDA plots
+- **Jupyter Notebook** — analysis environment (2 notebooks: EDA + Modeling)
 
 ---
 
-### Finding 5: Security Features Build Confidence
+## Installation
 
-| Online Security | Churn Rate | Churn Reduction |
-|-----------------|-----------|-----------------|
-| No Security | 42% | - |
-| With Security | 15% | -27 pts |
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/customer-churn-analysis.git
+cd customer-churn-analysis
 
-**Insight:** Security features reduce churn by 27 points, matching tech support's impact. Customers value security and trust.
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
----
-
-## 5. Recommendations
-
-### Immediate Actions (Next 30 Days)
-
-**1. New Customer Retention Program**
-- Provide free technical support for the first 90 days
-- Check that their service is working properly
-- Send them helpful tips about their service via email
-- Follow up if they report any issues
-
-**Why this matters:** Most customers who leave do so in their first month. Providing support and ensuring everything works smoothly during this period can prevent churn.
-
-**2. Contract Incentive Program**
-- Offer discounts (20-25%) to customers who switch from month-to-month to annual contracts
-- Provide better discounts for two-year contracts
-- Make it easy for customers to upgrade their contract
-
-**Why this matters:** Data shows that customers with longer contracts are far less likely to leave. Incentives encourage commitment.
-
-**3. Fiber Optic Service Improvement**
-- Review and test Fiber optic network performance
-- Identify where service speed and reliability are falling short
-- Offer service credits when performance doesn't meet standards
-- Keep customers informed about improvements being made
-
-**Why this matters:** Fiber optic customers pay the highest prices but experience the most churn. Fixing these issues will significantly reduce cancellations.
-
-**4. Make Tech Support Available and Accessible**
-- Offer basic technical support free to all customers
-- Provide support 24 hours a day, 7 days a week
-- Aim to respond to customer issues within 2 hours
-- Train support staff to identify problems early and resolve them quickly
-
-**Why this matters:** Customers with access to tech support are much less likely to cancel. Easy access to help keeps customers satisfied.
-
-### Medium-term Actions (1-3 Months)
-
-1. Put the prediction model into use to identify at-risk customers automatically
-2. Set up alerts when customers show signs they might leave
-3. Create specific retention plans for different customer groups
-4. Track which retention efforts actually work and measure their results
-5. Test different approaches to see what works best
-
-### Long-term Strategy (3-6 Months)
-
-1. Update the prediction model regularly with new customer data
-2. Keep improving Fiber optic service quality based on customer feedback
-3. Build a rewards program that benefits loyal, long-term customers
-4. Use support data to spot and fix problems before customers decide to leave
-5. Review churn data every quarter and adjust the strategy as needed
-
-### Priority Ranking
-
-1. **Most Important:** Fix Fiber optic service + improve new customer experience
-2. **Very Important:** Expand tech support + offer contract discounts
-3. **Important:** Build loyalty program + start using prediction model
-
-### Expected Results
-
-- **Overall churn should drop by 5-10%**
-- **Customers will stay longer and spend more money**
-- **Resources can be focused on customers who really need help**
-- **Revenue will improve as fewer customers leave**
+# Install dependencies
+pip install -r requirements.txt
+```
 
 ---
 
-## Project Files
+## Project Structure
 
-- **notebooks/churn_analysis.ipynb** - Exploratory data analysis with statistical relationships
-- **notebooks/churn_analysis_model.ipynb** - Model development and performance evaluation
-- **data/Telco-Customer-Churn.csv** - Customer dataset (7,043 records)
-- **README.md** - Project documentation
+```
+customer-churn-analysis/
+├── README.md
+├── requirements.txt
+├── dataset/
+│   └── Telco_Customer_Churn.csv
+├── notebooks/
+│   ├── churn_analysis.ipynb (EDA)
+│   └── churn_analysis_model.ipynb (Modeling)
+└── images/
+    ├── banner.png
+    ├── churn_distribution.png
+    ├── feature_importance.png
+    ├── confusion_matrix.png
+    └── roc_curve.png
+```
 
 ---
 
-## Technologies Used
+## How to Run
 
-- **Python** (data analysis and statistical modeling)
-- **Libraries:** pandas, scikit-learn, matplotlib, seaborn
-- **Model:** Logistic Regression with balanced class weights for imbalanced classification
+### Part 1: Exploratory Data Analysis
+```bash
+jupyter notebook notebooks/churn_analysis.ipynb
+```
+Explores customer patterns, visualizes churn drivers, and identifies key features.
+
+### Part 2: Predictive Modeling
+```bash
+jupyter notebook notebooks/churn_analysis_model.ipynb
+```
+Builds Logistic Regression model, evaluates performance, and generates predictions.
 
 ---
 
-*Data source: [Kaggle Telco Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)*
+## Results
+
+### Model Performance
+
+| Metric | Score | Interpretation |
+|--------|-------|----------------|
+| **Recall** | **79.4%** | Identifies 297 of 374 actual churners — primary objective achieved |
+| **ROC-AUC** | **82.5%** | Excellent discrimination ability |
+| **Accuracy** | 72.6% | Overall prediction correctness |
+| **Precision** | 49.1% | Acceptable false alarm rate for retention campaigns |
+| **F1 Score** | 60.7% | Balanced precision-recall performance |
+
+### Key Findings from EDA
+
+**Churn Rate:** 26.6% overall (1,869 of 7,043 customers)
+
+**Highest Risk Segments:**
+- **Month-to-month contracts:** 42% churn rate vs 3% for two-year contracts
+- **Fiber optic internet:** 41% churn rate vs 19% for DSL
+- **No tech support:** 42% churn rate vs 15% with tech support
+- **New customers (0-12 months tenure):** 50%+ churn rate
+
+**Lowest Risk Segments:**
+- **Two-year contracts:** 3% churn rate — 14x lower than month-to-month
+- **Long-term customers (60+ months):** <10% churn rate
+- **Customers with online security:** 15% churn rate
+
+### Feature Importance (Model Coefficients)
+
+**Top Churn Drivers (Increase Risk):**
+1. **InternetService_Fiber optic** (+0.577) — highest positive coefficient
+2. **Contract_Month-to-month** (baseline) — lack of commitment increases risk
+
+**Top Retention Factors (Decrease Risk):**
+1. **Contract_Two year** (-1.554) — strongest protective factor
+2. **Contract_One year** (-0.897) — moderate protection
+3. **OnlineSecurity_Yes** (-0.567) — security services reduce churn
+4. **TechSupport_Yes** (-0.512) — support access critical for retention
+5. **Tenure** (-0.054) — cumulative loyalty effect over time
+
+### Visualizations
+
+**1. Churn Distribution**
+The dataset shows a 73.4% retention rate with 5,174 retained customers and 26.6% churn rate with 1,869 churned customers, indicating significant class imbalance handled through model balancing.
+
+![Churn Distribution](images/churn_distribution.png)
+
+**2. Feature Importance - Model Coefficients**
+Contract type dominates churn prediction, with two-year contracts providing the strongest protection (-1.554 coefficient) while fiber optic internet increases risk (+0.577 coefficient).
+
+![Feature Importance](images/feature_importance.png)
+
+**3. Confusion Matrix**
+The model correctly identifies 297 of 374 churners (79.4% recall) with 725 true negatives, 308 false positives, and only 77 missed churners (false negatives).
+
+![Confusion Matrix](images/confusion_matrix.png)
+
+**4. ROC Curve (AUC = 0.825)**
+The ROC curve demonstrates excellent discrimination ability, positioned well above the random baseline with 82.5% probability of correctly ranking a churner higher than a non-churner.
+
+![ROC Curve](images/roc_curve.png)
+
+### Business Interpretation
+
+The 79.4% recall means the model identifies approximately **4 out of 5 customers** who will churn, enabling proactive retention campaigns. The 49.1% precision indicates half of flagged customers will actually churn, which is acceptable for retention programs where contacting additional customers is preferable to missing at-risk churners.
+
+**ROI Estimate:** With typical telecom CLV of $1,500 and retention campaign cost of $75/customer, the model enables a **10x return** by identifying 297 true churners for targeted intervention.
+
+---
+
+## Business Recommendations
+
+### Top Priority Actions
+
+**1. Contract Upgrade Incentive Program**
+- **Target:** Month-to-month customers (42% churn rate)
+- **Action:** Offer discounts for one-year or two-year contract upgrades
+- **Expected Impact:** 14x reduction in churn risk (42% → 3%)
+
+**2. Fiber Optic Service Quality Improvement**
+- **Target:** Fiber optic customers (41% churn rate vs 19% DSL)
+- **Action:** Investigate service quality issues, improve network reliability
+- **Expected Impact:** 50% reduction in fiber churn (41% → 20%)
+
+**3. New Customer Onboarding Enhancement**
+- **Target:** 0-12 month tenure customers (50%+ churn rate)
+- **Action:** Dedicated onboarding specialist, 30/60/90 day check-ins
+- **Expected Impact:** 30% reduction in early-stage churn
+
+**4. Predictive Retention Workflow**
+- **Target:** Model-flagged high-risk customers (churn probability >0.7)
+- **Action:** Automated retention workflow with escalating interventions
+- **Expected Impact:** 60-70% win-back rate on flagged customers
+
+---
+
+## Challenges and Limitations
+
+- **Class imbalance:** 73:27 ratio requires careful model tuning
+- **49.1% precision:** Half of flagged customers are false positives
+- **Snapshot data:** Single time point lacks customer journey tracking
+- **Missing variables:** No customer satisfaction scores, support ticket data, competitor pricing
+
+---
+
+## Future Work
+
+- **Ensemble methods:** Random Forest, Gradient Boosting for improved accuracy
+- **Longitudinal data:** Track customer behavior changes over 12-24 months
+- **Real-time scoring:** API for live churn risk assessment
+- **Explainable AI:** SHAP values for transparent customer-level churn reasons
+- **A/B testing framework:** Measure retention campaign effectiveness
+
+---
+
+## Practical Applications
+
+- **Proactive retention campaigns** — contact at-risk customers before they churn
+- **Contract renewal optimization** — target month-to-month customers with upgrade incentives
+- **Service quality monitoring** — identify fiber optic quality issues driving churn
+- **Resource allocation** — focus retention team on model-flagged high-risk customers
+- **Executive dashboards** — real-time churn risk monitoring for business leadership
